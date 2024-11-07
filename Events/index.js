@@ -3,7 +3,12 @@ const PizzaShop = require("./pizzaShop");
 const DrinkMachine = require("./drinkMachine");
 
 function main() {
-  eventUsingEventEmitter();
+  // eventUsingEventEmitter();
+  removeEventListener();
+  console.log(
+    "=================================================================="
+  );
+
   // eventUsingCustomClass();
 }
 
@@ -22,21 +27,20 @@ function eventUsingEventEmitter() {
       console.log("custom event 2 called");
     })
     //will get called only once
-    .once("custom_event3", function (data) {
-      // console.log("Received data : ", data);
-      // console.log(this);
+    .on("custom_event3", function (data) {
+      console.log("Received data : ", data);
     })
-    .prependListener("custom_event1", () => {
-      console.log("prepend get called first");
+    .once("custom", () => {
+      console.log("handler get called once");
     });
 
   //emitting the events
   events.emit("custom_event1");
-  //emitting the events with some data
-  events.emit("custom_event3", "arg1");
+  // emitting the events with some data
+  events.emit("custom_event2");
   events.emit("custom_event3", "arg2");
-
-  // console.dir(EventEmitter, { depth: null });
+  events.emit("custom");
+  // console.dir(events, { depth: null });
 }
 
 function eventUsingCustomClass() {
@@ -52,4 +56,42 @@ function eventUsingCustomClass() {
   pizzaShop.order("small", "onion");
 
   pizzaShop.displayOrder();
+}
+
+function removeEventListener() {
+  const events = new EventEmitter();
+
+  //emitter options
+  const emitterOptions = {
+    dataLimit: 6,
+    dataCount: 0,
+  };
+
+  // handler
+  function handler() {
+    console.log("a data event has occurred");
+    emitterOptions.dataCount++;
+  }
+
+  //listener
+  events.on("data", handler);
+
+  events.on("remove", () => {
+    events.removeListener("data", handler);
+  });
+
+  //emit every second
+
+  setInterval(() => {
+    events.emit("data");
+    if (emitterOptions.dataCount === emitterOptions.dataLimit) {
+      events.emit("remove");
+    }
+    console.log(emitterOptions, { colors: true });
+  }, 1000);
+
+  // //settimeout does not guarantee ,it will run in exactly after 4s
+  // setTimeout(() => {
+  //   events.removeListener("data", handler);
+  // }, 4000);
 }
