@@ -3,8 +3,8 @@ const PizzaShop = require("./pizzaShop");
 const DrinkMachine = require("./drinkMachine");
 
 function main() {
-  // eventUsingEventEmitter();
-  eventUsingCustomClass();
+  eventUsingEventEmitter();
+  // eventUsingCustomClass();
 }
 
 main();
@@ -23,17 +23,20 @@ function eventUsingEventEmitter() {
     })
     //will get called only once
     .once("custom_event3", function (data) {
-      console.log("Received data : ", data);
-      console.log(this);
+      // console.log("Received data : ", data);
+      // console.log(this);
+    })
+    .prependListener("custom_event1", () => {
+      console.log("prepend get called first");
     });
 
   //emitting the events
   events.emit("custom_event1");
-  //emiting the events with some data
+  //emitting the events with some data
   events.emit("custom_event3", "arg1");
   events.emit("custom_event3", "arg2");
 
-  console.dir(EventEmitter, { depth: null });
+  // console.dir(EventEmitter, { depth: null });
 }
 
 function eventUsingCustomClass() {
