@@ -111,13 +111,39 @@ function removeAllListener() {
   }, (timeout = 4000));
 }
 
+function maxListeners() {
+  const event1 = new EventEmitter();
+  const event2 = new EventEmitter();
+
+  // const defaultMax = event.getMaxListeners();
+  event1.setMaxListeners(30);
+  const defaultMax = event1.getMaxListeners();
+  console.log(defaultMax);
+
+  event1
+    .on("data", () => {
+      console.log("data event fired");
+    })
+    .addListener("data", (param1) => {
+      console.log("data event fired with " + param1);
+    })
+    .once("message", () => {
+      console.log("message event fired once");
+    });
+
+  console.log(`
+      ${event1.eventNames()} 
+      ${event1.listenerCount("data")} 
+      ${event1.listeners("data")}`);
+
+  console.log(event1, event2);
+}
+
 function main() {
   // eventUsingEventEmitter();
   // removeEventListener();
-  removeAllListener();
-  console.log(
-    "=================================================================="
-  );
+  // removeAllListener();
+  maxListeners();
 
   // eventUsingCustomClass();
 }
