@@ -2,18 +2,6 @@ const EventEmitter = require("events");
 const PizzaShop = require("./pizzaShop");
 const DrinkMachine = require("./drinkMachine");
 
-function main() {
-  // eventUsingEventEmitter();
-  removeEventListener();
-  console.log(
-    "=================================================================="
-  );
-
-  // eventUsingCustomClass();
-}
-
-main();
-
 function eventUsingEventEmitter() {
   const events = new EventEmitter();
 
@@ -95,3 +83,43 @@ function removeEventListener() {
   //   events.removeListener("data", handler);
   // }, 4000);
 }
+
+function removeAllListener() {
+  const events = new EventEmitter();
+
+  events.on("data", () => {
+    console.log("data event fired");
+  });
+
+  events
+    .on("data", (person) => {
+      console.log("data event fired " + person);
+    })
+    .on("message", () => {
+      console.log("message event fired");
+    });
+  //every second emit data events
+
+  setInterval(() => {
+    events.emit("data");
+    events.emit("message");
+  }, (interval = 1000));
+
+  setTimeout(() => {
+    // events.removeAllListeners("message");
+    events.removeAllListeners();
+  }, (timeout = 4000));
+}
+
+function main() {
+  // eventUsingEventEmitter();
+  // removeEventListener();
+  removeAllListener();
+  console.log(
+    "=================================================================="
+  );
+
+  // eventUsingCustomClass();
+}
+
+main();
